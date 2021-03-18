@@ -25,6 +25,17 @@ p11 = Point(15, 15)
 p12 = Point(15, 10)
 polygon3 = Polygon([p9, p10, p11, p12, p9])
 
+p13 = Point(3, 1)
+p14 = Point(13, 3)
+p15 = Point(12, 7)
+p16 = Point(6, 9)
+p17 = Point(1, 4)
+polygon4 = Polygon([p13, p14, p15, p16, p17, p13])
+
+p18 = Point(5, 5)
+p19 = Point(5, 6)
+p20 = Point(6, 6)
+polygon5 = Polygon([p18, p19, p20, p18])
 
 # one polygon contains the other
 def test_polygon_with_border_contains_polygon_T():
@@ -51,8 +62,14 @@ def test_polygon_contains_distinct_polygon_T():
     assert polygon2_in_polygon1 == [0], f"Wrong polygon is recognized to be inside other polygon or polygons do not contian each other"
     print('test passed')
 
+def test_polygon_with_many_points_T():
+    polygon2_in_polygon1 = polygon_contains_polygon(polygon4, polygon5)
+    assert polygon2_in_polygon1 == [1, p18, p19, p20, p18]
+    print('test passed')
 
 test_polygon_with_border_contains_polygon_T()
 test_polygon_contains_identical_polygon_T()
-test_polygon_with_hole_contains_polygon_T()
 test_polygon_contains_distinct_polygon_T()
+test_polygon_with_many_points_T()
+test_polygon_with_hole_contains_polygon_T()
+polygon4.draw()

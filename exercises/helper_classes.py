@@ -74,6 +74,25 @@ class Polygon:
             segments.append(Line(self.holes[hole_number].points[segment_number], self.holes[hole_number].points[segment_number + 1]))
         return segments
 
+    def draw(self):
+        output = ''
+        counter = 0
+        for i in range(20,0,-1):
+            for j in range(20):
+                found = False
+                for point in self.points[:-1]:
+                    if point.yCoord == i and point.xCoord == j:
+                        output += '\u25CF'
+                        counter += 1
+                        found = True
+                if not found:
+                    output += ' '
+            if counter == len(self.points)-1:
+                break
+            output += '\n'
+        print(output)
+        print('____________________')
+
 
 # A hole is a polygon but WITHOUT further holes inside it
 class Hole:
