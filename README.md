@@ -1,3 +1,3 @@
 # geometrische_algorithmen
 
-solutions for several geometric problems with test cases
+My solutions for several geometric problems
