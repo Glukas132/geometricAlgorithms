@@ -21,26 +21,26 @@ hole_p2 = Hole([h1, h2, h3, h4, h1])
 
 
 # one polygon contains the other
-def test_polygon_contains_polygon_T1():
+def test_polygon_contains_polygon_T():
     polygon2_in_polygon1 = polygon_contains_polygon(polygon1, polygon2)
     assert polygon2_in_polygon1 == [1, p5, p6, p7, p8, p5], f"Wrong polygon is recognized to be inside other polygon or polygons do not contian each other"
     print('test 1 passed')
 
 
-def test_polygon_with_hole_contains_polygon_T3():
+def test_polygon_with_hole_contains_polygon_T():
     polygon2.holes.append(hole_p2)
     polygon2_in_polygon1 = polygon_contains_polygon(polygon1, polygon2)
     assert polygon2_in_polygon1 == [0], f"Wrong polygon is recognized to be inside other polygon or polygons do not contian each other"
     print('test 3 passed')
 
 
-def test_polygon_contains_polygon_T2():
+def test_polygon_contains_identical_polygon_T():
     polygon2_in_polygon1 = polygon_contains_polygon(polygon1, polygon1)
     assert polygon2_in_polygon1 == [1, p1, p2, p3, p4, p1, p1, p2, p3, p4, p1], f"Wrong polygon is recognized to be inside other polygon or polygons do not contian each other"
     print('test 2 passed')
 
 
 
-test_polygon_contains_polygon_T1()
-test_polygon_contains_polygon_T2()
-test_polygon_contains_polygon_T3()
+test_polygon_contains_polygon_T()
+test_polygon_with_hole_contains_polygon_T()
+test_polygon_contains_identical_polygon_T()
