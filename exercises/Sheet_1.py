@@ -64,7 +64,7 @@ def is_vertex_inside_polygon(vertex: Point, polygon: Polygon):
     for i, hole in enumerate(polygon.holes):
         segments = polygon.get_hole_line_segments(i)
         for segment in segments:
-            if vertex.point_position(segment.startNode, segment.endNode) != 1:
+            if vertex.point_position(segment.startNode, segment.endNode) != -1:
                 return False
 
     return True

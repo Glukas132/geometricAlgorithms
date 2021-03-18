@@ -32,10 +32,10 @@ class Line:
 
     def intersect_line(self, line):
         return  \
-            (line.startNode.point_position(self.startNode, self.endNode) * \
-            line.endNode.point_position(self.startNode, self.endNode)) < 0 and \
-            (self.startNode.point_position(line.startNode, line.endNode) * \
-            self.endNode.point_position(line.startNode, line.endNode)) < 0
+            (line.startNode.point_position(self.startNode, self.endNode) *
+             line.endNode.point_position(self.startNode, self.endNode)) < 0 and \
+            (self.startNode.point_position(line.startNode, line.endNode) *
+             self.endNode.point_position(line.startNode, line.endNode)) < 0
 
     def get_length(self):
         return ((self.endNode.xCoord - self.startNode.xCoord)**2+(self.endNode.yCoord - self.startNode.yCoord)**2)**0.5
