@@ -18,6 +18,7 @@ h2 = Point(3, 2)
 h3 = Point(3, 3)
 h4 = Point(2, 3)
 hole_p2 = Hole([h1, h2, h3, h4, h1])
+polygonh2 = Polygon([h1, h2, h3, h4, h1])
 
 p9 = Point(10, 10)
 p10 = Point(10, 15)
@@ -37,6 +38,15 @@ p19 = Point(5, 6)
 p20 = Point(6, 6)
 polygon5 = Polygon([p18, p19, p20, p18])
 
+p21 = Point(0, 0)
+p22 = Point(100, 0)
+p23 = Point(100, 100)
+p24 = Point(0, 100)
+polygon6 = Polygon([p21, p22, p23, p24, p21])
+polygon6.holes.append(Hole([p5, p6, p7, p8, p5]))
+polygon6.holes.append(Hole([p13, p14, p15, p16, p17, p13]))
+polygon6.holes.append(Hole([p9, p10, p11, p12, p9]))
+
 # one polygon contains the other
 def test_polygon_with_border_contains_polygon_T():
     polygon2_in_polygon1 = polygon_contains_polygon(polygon1, polygon2)
@@ -52,25 +62,32 @@ def test_polygon_with_hole_contains_polygon_T():
 
 
 def test_polygon_contains_identical_polygon_T():
-    polygon2_in_polygon1 = polygon_contains_polygon(polygon1, polygon1)
-    assert polygon2_in_polygon1 == [1, p1, p2, p3, p4, p1, p1, p2, p3, p4, p1], f"Wrong polygon is recognized to be inside other polygon or polygons do not contian each other"
+    polygon1_in_polygon1 = polygon_contains_polygon(polygon1, polygon1)
+    assert polygon1_in_polygon1 == [1, p1, p2, p3, p4, p1, p1, p2, p3, p4, p1], f"Wrong polygon is recognized to be inside other polygon or polygons do not contian each other"
     print('test passed')
 
 
 def test_polygon_contains_distinct_polygon_T():
-    polygon2_in_polygon1 = polygon_contains_polygon(polygon2, polygon3)
-    assert polygon2_in_polygon1 == [0], f"Wrong polygon is recognized to be inside other polygon or polygons do not contian each other"
+    polygon2_in_polygon3 = polygon_contains_polygon(polygon2, polygon3)
+    assert polygon2_in_polygon3 == [0], f"Wrong polygon is recognized to be inside other polygon or polygons do not contian each other"
     print('test passed')
 
 def test_polygon_with_many_points_T():
-    polygon2_in_polygon1 = polygon_contains_polygon(polygon4, polygon5)
-    assert polygon2_in_polygon1 == [1, p18, p19, p20, p18]
+    polygon5_in_polygon4 = polygon_contains_polygon(polygon4, polygon5)
+    assert polygon5_in_polygon4 == [1, p18, p19, p20, p18]
     print('test passed')
+
+def test_polygon_with_multiple_holes():
+    polygonh2_in_polygon6 = polygon_contains_polygon(polygon6, polygonh2)
+    assert polygonh2_in_polygon6 == [0]
+    print('test passed')
+
 
 polygon1.draw()
 
-# test_polygon_with_border_contains_polygon_T()
-# test_polygon_contains_identical_polygon_T()
-# test_polygon_contains_distinct_polygon_T()
-# test_polygon_with_many_points_T()
+test_polygon_with_border_contains_polygon_T()
+test_polygon_contains_identical_polygon_T()
+test_polygon_contains_distinct_polygon_T()
+test_polygon_with_many_points_T()
 test_polygon_with_hole_contains_polygon_T()
+test_polygon_with_multiple_holes()

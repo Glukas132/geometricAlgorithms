@@ -71,7 +71,9 @@ class Polyline:
 
 # Polygon class (CCW - see picture in readme file)
 class Polygon:
-    def __init__(self, arrayOfPoints, arrayOfHoles=[]):
+    def __init__(self, arrayOfPoints, arrayOfHoles=None):
+        if arrayOfHoles is None:
+            arrayOfHoles = [].copy()
         if len(arrayOfPoints) < 4:
             raise Exception("Polygon has to have at least 4 points (first and last point should be the same)")
         if not arrayOfPoints[0].sameCoordinates(arrayOfPoints[-1]):
