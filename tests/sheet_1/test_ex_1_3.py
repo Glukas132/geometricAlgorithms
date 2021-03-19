@@ -1,4 +1,4 @@
-from exercises.Ex_1 import *
+from exercises.Sheet_1 import *
 from exercises.helper_classes import Point, Polygon
 
 p1 = Point(0, 0)
@@ -16,4 +16,7 @@ polygon2 = Polygon(arrayOfPoints=[p5, p6, p7, p8, p5])
 
 def test_non_overlapping_area_1_25_75():
     result = non_overlapping_area(polygon1, polygon2)
-    assert result == [1, 25.75], f"Overlap is not recognized correctly or area is not 25.75 but {area}"
+    assert result == [1, 25.75], f"Overlap is not recognized correctly or area is not 25.75 but {result[1]}"
+    print("test passed")
+
+test_non_overlapping_area_1_25_75()

@@ -40,7 +40,7 @@ class Line:
         self.endNode = p2
 
     # taken from the slides
-    def intersect_line(self, line):
+    def is_intersecting_line(self, line):
         """
         Calculates whether this line intersects another line
         :param line: the line to intersection with
@@ -51,6 +51,31 @@ class Line:
              line.endNode.point_position(self.startNode, self.endNode)) < 0 and \
             (self.startNode.point_position(line.startNode, line.endNode) *
              self.endNode.point_position(line.startNode, line.endNode)) < 0
+
+    def intersect_line(self, line):
+        '''
+        Calculates the coordinates of the intersection between two lines and returns it as a point
+        :param line: the line to intersect with
+        :return: the intersection as a point; False if there is no intersection
+        '''
+        intersection = Point(0, 0)
+        if not self.is_intersecting_line(line):
+            return False
+        x1 = self.startNode.xCoord
+        y1 = self.startNode.yCoord
+        x2 = self.endNode.xCoord
+        y2 = self.endNode.yCoord
+        x3 = line.startNode.xCoord
+        y3 = line.startNode.yCoord
+        x4 = line.endNode.xCoord
+        y4 = line.endNode.yCoord
+        # Formula taken from
+        # https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line_segment
+        t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
+        u = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
+        intersection.xCoord = (x1 + t * (x2 - x1))
+        intersection.yCoord = (y1 + t * (y2 - y1))
+        return intersection
 
     def get_length(self):
         """
@@ -82,6 +107,16 @@ class Polygon:
             raise Exception("Only Points should be in the list")
         self.points = arrayOfPoints
         self.holes = arrayOfHoles
+
+    def calculate_area(self):
+        area = 0
+        for i in range(len(self.points)-1):
+            area += (self.points[i].xCoord + self.points[i+1].xCoord) * (self.points[i+1].yCoord - self.points[i].yCoord)
+
+        for hole in self.holes:
+            area -= hole.calculate_area()
+
+        return abs(area / 2)
 
     def get_line_segments(self):
         segments = []
@@ -127,3 +162,9 @@ class Hole:
         for segment_number in range(len(self.points)-1):
             segments.append(Line(self.points[segment_number], self.points[segment_number+1]))
         return segments
+
+    def calculate_area(self):
+        area = 0
+        for i in range(len(self.points)-1):
+            area += (self.points[i].xCoord + self.points[i+1].xCoord) * (self.points[i+1].yCoord - self.points[i].yCoord)
+        return abs(area / 2)

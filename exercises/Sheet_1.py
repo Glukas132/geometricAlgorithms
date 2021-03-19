@@ -76,7 +76,32 @@ def non_overlapping_area(polygon1, polygon2):
     and the area of the non_overlapping area of both polygons summed and rounded to two decimal digits (example 23.43).
     """
     overlapping_result = 0
-    non_overlapping_area = 0
+    intersection_counter = 0
+    overlapping_polygon_points = []
+    for line1 in polygon1.get_line_segments():
+        for line2 in polygon2.get_line_segments():
+            if line1.is_intersecting_line(line2):
+                if intersection_counter == 0:
+                    overlapping_polygon_points.append(line1.intersect_line(line2))
+                    overlapping_polygon_points.append(line1.endNode)
+                elif intersection_counter == 1:
+                    overlapping_polygon_points.append(line1.intersect_line(line2))
+                    overlapping_polygon_points.append(line2.endNode)
+                intersection_counter += 1
+                if intersection_counter == 2:
+                    overlapping_polygon_points.append(line2.endNode)
+        if intersection_counter == 1:
+            overlapping_polygon_points.append(line1.endNode)
+        if intersection_counter == 2:
+            break
+
+    if intersection_counter > 0:
+        overlapping_result = 1
+    non_overlapping_area = polygon1.calculate_area() + polygon2.calculate_area()
+    if overlapping_result:
+        overlapping_polygon_points.append(overlapping_polygon_points[0])
+        overlapping_polygon = Polygon(overlapping_polygon_points)
+        non_overlapping_area -= overlapping_polygon.calculate_area()
     return [overlapping_result, non_overlapping_area]
 
 
