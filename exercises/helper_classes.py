@@ -11,7 +11,16 @@ class Point:
         else:
             return False
 
+    # taken from the slides
     def point_position(self, point1, point2):
+        """
+        Calculates whether the point is left, right or collinear to another two points
+        :param point1: first point to define a line
+        :param point2: second point to define a line
+        :return: 0 - if the points are collinear;
+                 1 if the point is to the left of the line;
+                 -1 if the point is to the right of the line
+        """
         z_mod = (point2.xCoord - point1.xCoord) * (self.yCoord - point1.yCoord) - (self.xCoord - point1.xCoord) * (point2.yCoord - point1.yCoord)
         if z_mod == 0:
             return 0
@@ -30,7 +39,13 @@ class Line:
         self.startNode = p1
         self.endNode = p2
 
+    # taken from the slides
     def intersect_line(self, line):
+        """
+        Calculates whether this line intersects another line
+        :param line: the line to intersection with
+        :return: 1 if the lines intersect; 0 if the lines don't intersect
+        """
         return  \
             (line.startNode.point_position(self.startNode, self.endNode) *
              line.endNode.point_position(self.startNode, self.endNode)) < 0 and \
@@ -38,6 +53,10 @@ class Line:
              self.endNode.point_position(line.startNode, line.endNode)) < 0
 
     def get_length(self):
+        """
+        Calculates the length of the line
+        :return: the length
+        """
         return ((self.endNode.xCoord - self.startNode.xCoord)**2+(self.endNode.yCoord - self.startNode.yCoord)**2)**0.5
 
 
@@ -68,16 +87,10 @@ class Polygon:
             segments.append(Line(self.points[segment_number], self.points[segment_number+1]))
         return segments
 
-    def get_hole_line_segments(self, hole_number):
-        segments = []
-        for segment_number in range(len(self.holes[hole_number].points)-1):
-            segments.append(Line(self.holes[hole_number].points[segment_number], self.holes[hole_number].points[segment_number + 1]))
-        return segments
-
     def draw(self):
         output = ''
         counter = 0
-        for i in range(20,0,-1):
+        for i in range(19, -1, -1):
             for j in range(20):
                 found = False
                 for point in self.points[:-1]:
@@ -106,3 +119,9 @@ class Hole:
         self.points = arrayOfPoints
         # no further holes inside holes
         self.holes = []
+
+    def get_line_segments(self):
+        segments = []
+        for segment_number in range(len(self.points)-1):
+            segments.append(Line(self.points[segment_number], self.points[segment_number+1]))
+        return segments

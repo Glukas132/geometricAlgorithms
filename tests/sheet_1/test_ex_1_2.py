@@ -47,7 +47,7 @@ def test_polygon_with_border_contains_polygon_T():
 def test_polygon_with_hole_contains_polygon_T():
     polygon1.holes.append(hole_p2)
     polygon2_in_polygon1 = polygon_contains_polygon(polygon1, polygon2)
-    assert polygon2_in_polygon1 == [0], f"Wrong polygon is recognized to be inside other polygon or polygons do not contian each other"
+    assert polygon2_in_polygon1 == [1, p5, p6, p7, p8, p5], f"Wrong polygon is recognized to be inside other polygon or polygons do not contian each other"
     print('test passed')
 
 
@@ -67,9 +67,10 @@ def test_polygon_with_many_points_T():
     assert polygon2_in_polygon1 == [1, p18, p19, p20, p18]
     print('test passed')
 
-test_polygon_with_border_contains_polygon_T()
-test_polygon_contains_identical_polygon_T()
-test_polygon_contains_distinct_polygon_T()
-test_polygon_with_many_points_T()
+polygon1.draw()
+
+# test_polygon_with_border_contains_polygon_T()
+# test_polygon_contains_identical_polygon_T()
+# test_polygon_contains_distinct_polygon_T()
+# test_polygon_with_many_points_T()
 test_polygon_with_hole_contains_polygon_T()
-polygon4.draw()

@@ -17,6 +17,7 @@ def smallest_n():
 # smallest n for which O(100*n**2) faster than O(2**n) = 15
 # smallest_n()
 
+
 # Exercise 2
 def polygon_contains_polygon(polygon1, polygon2):
     """
@@ -51,7 +52,6 @@ def polygon_contains_polygon(polygon1, polygon2):
         result[0] = 1
         result.extend(vertices_of_inside_polygon2)
     # in case poly1 == poly2 then poly1 is inside poly2 and poly2 is inside poly1 -> all vertices are in return list
-
     return result
 
 
@@ -61,12 +61,9 @@ def is_vertex_inside_polygon(vertex: Point, polygon: Polygon):
         if vertex.point_position(segment.startNode, segment.endNode) == -1:
             return False
 
-    for i, hole in enumerate(polygon.holes):
-        segments = polygon.get_hole_line_segments(i)
-        for segment in segments:
-            if vertex.point_position(segment.startNode, segment.endNode) != -1:
-                return False
-
+    for hole in polygon.holes:
+        if is_vertex_inside_polygon(vertex, hole):
+            return False
     return True
 
 
