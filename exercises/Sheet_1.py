@@ -5,14 +5,16 @@
 
 from exercises.helper_classes import *
 
+
 # Exercise 1
 # Write your answer please as comment.
 # Write your code that provides you with the above answer.
 def smallest_n():
     n = 1
-    while 100*n**2 > 2**n:
+    while 100 * n ** 2 > 2 ** n:
         n += 1
     print(n)
+
 
 # smallest n for which O(100*n**2) faster than O(2**n) = 15
 # smallest_n()
@@ -68,6 +70,46 @@ def is_vertex_inside_polygon(vertex: Point, polygon: Polygon):
 
 
 # Exercise 3
+
+def create_in_out_lists(polygon1, polygon2):
+    string1 = 'intersection'
+    string2 = 'intersection'
+    poly1_points = []
+    poly1_in_out = []
+    intersection_counter = 0
+    for point in polygon1.points:
+        if len(poly1_in_out) > 0:
+            for line in polygon2.get_line_segments():
+                if Line(poly1_points[-1], point).is_intersecting_line(line):
+                    if intersection_counter % 2 == 0:
+                        poly1_in_out.append(string1)
+                    else:
+                        poly1_in_out.append(string2)
+                    intersection_counter += 1
+                    poly1_points.append(Line(poly1_points[-1], point).intersect_line(line))
+        if is_vertex_inside_polygon(point, polygon2):
+            poly1_in_out.append('in')
+            poly1_points.append(point)
+        else:
+            poly1_in_out.append('out')
+            poly1_points.append(point)
+        if intersection_counter == 0:
+            if poly1_in_out[0] == 'in':
+                string1 = 'leaving'
+                string2 = 'entering'
+            else:
+                string1 = 'entering'
+                string2 = 'leaving'
+    poly1_in_out.pop()
+    poly1_points.pop()
+
+    for i in range(len(poly1_in_out)-1):
+        if poly1_in_out[i] == 'entering' and poly1_in_out[i+1] != 'in':
+            if Line(poly1_points[i-1], poly1_points[i]).get_length() - Line(poly1_points[i-1], poly1_points[i+1]).get_length() > 0:
+                poly1_points[i], poly1_points[i+1] = poly1_points[i+1], poly1_points[i]
+
+    return [poly1_in_out, poly1_points, intersection_counter]
+
 def non_overlapping_area(polygon1, polygon2):
     """
     :param polygon1: Polygon 1 of type Polygon
@@ -76,32 +118,33 @@ def non_overlapping_area(polygon1, polygon2):
     and the area of the non_overlapping area of both polygons summed and rounded to two decimal digits (example 23.43).
     """
     overlapping_result = 0
-    intersection_counter = 0
     overlapping_polygon_points = []
-    for line1 in polygon1.get_line_segments():
-        for line2 in polygon2.get_line_segments():
-            if line1.is_intersecting_line(line2):
-                if intersection_counter == 0:
-                    overlapping_polygon_points.append(line1.intersect_line(line2))
-                    overlapping_polygon_points.append(line1.endNode)
-                elif intersection_counter == 1:
-                    overlapping_polygon_points.append(line1.intersect_line(line2))
-                    overlapping_polygon_points.append(line2.endNode)
-                intersection_counter += 1
-                if intersection_counter == 2:
-                    overlapping_polygon_points.append(line2.endNode)
-        if intersection_counter == 1:
-            overlapping_polygon_points.append(line1.endNode)
-        if intersection_counter == 2:
-            break
+    poly1_in_out, poly1_points, intersection_counter = create_in_out_lists(polygon1, polygon2)
+    poly2_in_out, poly2_points, intersection_counter = create_in_out_lists(polygon2, polygon1)
+    i = 0
+    j = 0
+    if len(poly1_in_out) == 0:
+        print('polys not overlapping')
+        return
+    for intersection in range(intersection_counter//2):
+        while poly1_in_out[i % len(poly1_in_out)] != 'entering':
+            i += 1
+        while poly1_in_out[i % len(poly1_in_out)] != 'leaving':
+            overlapping_polygon_points.append(poly1_points[i % len(poly1_in_out)])
+            i += 1
+        while poly2_in_out[j % len(poly2_in_out)] != 'entering' or not poly2_points[j % len(poly2_in_out)].sameCoordinates(poly1_points[i % len(poly1_in_out)]):
+            j += 1
+        while poly2_in_out[j % len(poly2_in_out)] != 'leaving':
+            overlapping_polygon_points.append(poly2_points[j % len(poly2_in_out)])
+            j += 1
 
-    if intersection_counter > 0:
-        overlapping_result = 1
     non_overlapping_area = polygon1.calculate_area() + polygon2.calculate_area()
-    if overlapping_result:
+    if len(overlapping_polygon_points) > 3:
+        overlapping_result = 1
         overlapping_polygon_points.append(overlapping_polygon_points[0])
         overlapping_polygon = Polygon(overlapping_polygon_points)
         non_overlapping_area -= overlapping_polygon.calculate_area()
+    non_overlapping_area = round(non_overlapping_area, 2)
     return [overlapping_result, non_overlapping_area]
 
 

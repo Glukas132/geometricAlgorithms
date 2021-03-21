@@ -6,7 +6,7 @@ class Point:
         self.yCoord = yCoord
 
     def sameCoordinates(self, point):
-        if self.yCoord == point.yCoord and self.xCoord == point.xCoord:
+        if abs(self.yCoord - point.yCoord) < 0.00001 and abs(self.xCoord - point.xCoord) < 0.00001:
             return True
         else:
             return False
@@ -72,7 +72,6 @@ class Line:
         # Formula taken from
         # https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line_segment
         t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
-        u = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
         intersection.xCoord = (x1 + t * (x2 - x1))
         intersection.yCoord = (y1 + t * (y2 - y1))
         return intersection
@@ -98,7 +97,7 @@ class Polyline:
 class Polygon:
     def __init__(self, arrayOfPoints, arrayOfHoles=None):
         if arrayOfHoles is None:
-            arrayOfHoles = [].copy()
+            arrayOfHoles = []
         if len(arrayOfPoints) < 4:
             raise Exception("Polygon has to have at least 4 points (first and last point should be the same)")
         if not arrayOfPoints[0].sameCoordinates(arrayOfPoints[-1]):
