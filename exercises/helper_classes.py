@@ -11,6 +11,9 @@ class Point:
         else:
             return False
 
+    def length_to(self, point):
+        return ((self.xCoord - point.xCoord)**2+(self.yCoord - point.yCoord)**2)**0.5
+
     # taken from the slides
     def point_position(self, point1, point2):
         """

@@ -209,6 +209,8 @@ def line_in_polygon(line, polygon):
                     return Line(intersection, line.endNode).get_length()
         else:
             return 0
+
+
 # Exercise 5
 def sort_points(point_list, mode="SN", reverse=False):
     """
@@ -218,4 +220,70 @@ def sort_points(point_list, mode="SN", reverse=False):
     :param reverse: If the list should be reversed (default condition in case of mode="distance_to_centroid" is ascending)
     :return: The sorted list of points
     """
-    return []
+    if len(point_list) <= 1:
+        return point_list
+
+    result_list = []
+    if mode == "SN":
+        ref_point = point_list[len(point_list)//2]
+        lower_list = []
+        middle_list = []
+        upper_list = []
+        for point in point_list:
+            if ref_point.yCoord == point.yCoord:
+                middle_list.append(point)
+            elif ref_point.yCoord > point.yCoord:
+                lower_list.append(point)
+            else:
+                upper_list.append(point)
+        result_list.extend(sort_points(lower_list, mode))
+        result_list.extend(middle_list)
+        result_list.extend(sort_points(upper_list, mode))
+
+    elif mode == "EW":
+        ref_point = point_list[len(point_list)//2]
+        lower_list = []
+        middle_list = []
+        upper_list = []
+        for point in point_list:
+            if ref_point.xCoord == point.xCoord:
+                middle_list.append(point)
+            elif ref_point.xCoord > point.xCoord:
+                lower_list.append(point)
+            else:
+                upper_list.append(point)
+        result_list.extend(sort_points(lower_list, mode))
+        result_list.extend(middle_list)
+        result_list.extend(sort_points(upper_list, mode))
+
+    elif mode == "distance_to_centroid":
+        ref_point = point_list[len(point_list)//2]
+        lower_list = []
+        middle_list = []
+        upper_list = []
+        centroid = calculate_centroid(point_list)
+        for point in point_list:
+            if ref_point.length_to(centroid) == point.length_to(centroid):
+                middle_list.append(point)
+            elif ref_point.length_to(centroid) > point.length_to(centroid):
+                lower_list.append(point)
+            else:
+                upper_list.append(point)
+        result_list.extend(sort_points(lower_list, mode))
+        result_list.extend(middle_list)
+        result_list.extend(sort_points(upper_list, mode))
+
+    if reverse:
+        result_list.reverse()
+    return result_list
+
+
+def calculate_centroid(point_list):
+    x = 0
+    y = 0
+    for point in point_list:
+        x += point.xCoord
+        y += point.yCoord
+    x /= len(point_list)
+    y /= len(point_list)
+    return Point(x, y)
