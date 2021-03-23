@@ -92,6 +92,12 @@ class Polyline:
             raise Exception('Polyline must have at least 2 lines')
         self.lines = line_list
 
+    def get_length(self):
+        length = 0
+        for line in self.lines:
+            length += line.get_length()
+        return length
+
 
 # Polygon class (CCW - see picture in readme file)
 class Polygon:

@@ -169,9 +169,46 @@ def percentage_polylines_in_polygons(polyline_list, polygon_list):
     inside the provided polygons.
     """
     lines_50_percent = []
+    for polyline in polyline_list:
+        flag_25 = False
+        flag_35 = False
+        for polygon in polygon_list:
+            length_inside = polyline_in_polygon(polyline, polygon)
+            length_inside_percentage = length_inside/polyline.get_length()
+            if length_inside_percentage >= 0.5:
+                lines_50_percent.append(polyline)
+            elif length_inside_percentage and not flag_35 >= 0.35:
+                flag_35 = True
+            elif length_inside_percentage >= 0.25:
+                flag_25 = True
+            if flag_25 and flag_35:
+                lines_50_percent.append(polyline)
+
     return lines_50_percent
 
 
+def polyline_in_polygon(polyline, polygon):
+    length_inside = 0
+    for line in polyline.lines:
+        length_inside += line_in_polygon(line, polygon)
+    return length_inside
+
+
+def line_in_polygon(line, polygon):
+    if is_vertex_inside_polygon(line.startNode, polygon) and is_vertex_inside_polygon(line.endNode, polygon):
+        return line.get_length()
+    elif not is_vertex_inside_polygon(line.startNode, polygon) and not is_vertex_inside_polygon(line.endNode, polygon):
+        return 0
+    else:
+        for polygon_line in polygon.get_line_segments():
+            if line.is_intersecting_line(polygon_line):
+                intersection = line.intersect_line(polygon_line)
+                if is_vertex_inside_polygon(line.startNode, polygon):
+                    return Line(line.startNode, intersection).get_length()
+                else:
+                    return Line(intersection, line.endNode).get_length()
+        else:
+            return 0
 # Exercise 5
 def sort_points(point_list, mode="SN", reverse=False):
     """

@@ -1,4 +1,4 @@
-from exercises.Ex_1 import *
+from exercises.Sheet_1 import *
 from exercises.helper_classes import Point, Polygon, Line, Polyline
 
 p1 = Point(1, 3)
@@ -21,8 +21,10 @@ l3 = Line(Point(3.5, 5), Point(3.5, 3))
 l4 = Line(Point(3.5, 3), Point(3.5, 0))
 polyline2 = Polyline([l3, l4])
 
-
 # polyline lies completely inside the polygon
 def test_percentage_polylines_in_polygons_50():
-    result = percentage_polylines_in_polygons([polyline1,polyline2], [polygon1,polygon2])
+    result = percentage_polylines_in_polygons([polyline1, polyline2], [polygon1, polygon2])
     assert result == [polyline2], f"Polyline(s) with less than 50% of their length are selected as to be inside."
+    print('test passed!')
+
+test_percentage_polylines_in_polygons_50()
