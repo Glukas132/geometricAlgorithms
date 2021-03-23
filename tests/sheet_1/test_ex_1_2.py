@@ -13,6 +13,8 @@ p7 = Point(4, 4)
 p8 = Point(1, 4)
 polygon2 = Polygon(arrayOfPoints=[p5, p6, p7, p8, p5])
 
+print(non_overlapping_area(polygon1, polygon2))
+
 h1 = Point(2, 2)
 h2 = Point(3, 2)
 h3 = Point(3, 3)

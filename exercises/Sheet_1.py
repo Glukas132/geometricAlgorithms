@@ -70,7 +70,6 @@ def is_vertex_inside_polygon(vertex: Point, polygon: Polygon):
 
 
 # Exercise 3
-
 def create_in_out_lists(polygon1, polygon2):
     string1 = 'intersection'
     string2 = 'intersection'
@@ -117,6 +116,18 @@ def non_overlapping_area(polygon1, polygon2):
     :return: A list containing 0(False: in case of no overlap) or 1(True: in case of overlap) as the first element
     and the area of the non_overlapping area of both polygons summed and rounded to two decimal digits (example 23.43).
     """
+    contains_result = polygon_contains_polygon(polygon1, polygon2)
+    if contains_result[0] == 1:
+        if len(contains_result[1:]) == len(polygon1.points)+len(polygon2.points):
+            return [1, 0]  # polygons are identical, they overlap completely and the non overlapping area is 0
+        else:
+            if polygon1.points[0].sameCoordinates(contains_result[1]) and \
+                    polygon1.points[1].sameCoordinates(contains_result[2]):
+                return [1, polygon2.calculate_area() - polygon1.calculate_area()]  # polygon2 contains polygon1
+            else:
+                return [1, polygon1.calculate_area() - polygon2.calculate_area()]  # polygon1 contains polygon2
+
+
     overlapping_result = 0
     overlapping_polygon_points = []
     poly1_in_out, poly1_points, intersection_counter = create_in_out_lists(polygon1, polygon2)
