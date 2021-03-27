@@ -109,6 +109,7 @@ def create_in_out_lists(polygon1, polygon2):
 
     return [poly1_in_out, poly1_points, intersection_counter]
 
+
 def non_overlapping_area(polygon1, polygon2):
     """
     :param polygon1: Polygon 1 of type Polygon
@@ -126,7 +127,6 @@ def non_overlapping_area(polygon1, polygon2):
                 return [1, polygon2.calculate_area() - polygon1.calculate_area()]  # polygon2 contains polygon1
             else:
                 return [1, polygon1.calculate_area() - polygon2.calculate_area()]  # polygon1 contains polygon2
-
 
     overlapping_result = 0
     overlapping_polygon_points = []
@@ -150,7 +150,7 @@ def non_overlapping_area(polygon1, polygon2):
             j += 1
 
     non_overlapping_area = polygon1.calculate_area() + polygon2.calculate_area()
-    if len(overlapping_polygon_points) > 3:
+    if len(overlapping_polygon_points) > 2:
         overlapping_result = 1
         overlapping_polygon_points.append(overlapping_polygon_points[0])
         overlapping_polygon = Polygon(overlapping_polygon_points)
@@ -168,47 +168,53 @@ def percentage_polylines_in_polygons(polyline_list, polygon_list):
     :return: the list of polylines that satisfies the condition of lying more than 50% (>= 50%)
     inside the provided polygons.
     """
+
     lines_50_percent = []
     for polyline in polyline_list:
-        flag_25 = False
-        flag_35 = False
-        for polygon in polygon_list:
-            length_inside = polyline_in_polygon(polyline, polygon)
-            length_inside_percentage = length_inside/polyline.get_length()
-            if length_inside_percentage >= 0.5:
-                lines_50_percent.append(polyline)
-            elif length_inside_percentage and not flag_35 >= 0.35:
-                flag_35 = True
-            elif length_inside_percentage >= 0.25:
-                flag_25 = True
-            if flag_25 and flag_35:
-                lines_50_percent.append(polyline)
+        length_inside = 0
+        for line in polyline.lines:
+            for i in range(len(polygon_list)-1):
+                polygon1 = polygon_list[i]
+                overlapping_polygons = [polygon1]
+                for j in range(i+1, len(polygon_list)):
+                    polygon2 = polygon_list[j]
+                    if polygon1 != polygon2:
+                        point_counter = 0
+                        for point in polygon2.points:
+                            if is_vertex_inside_polygon(point, polygon1):
+                                point_counter += 1
+                        if point_counter > 0:
+                            overlapping_polygons.append(polygon2)
+                points_inside = []
+                for polygon in overlapping_polygons:
+                    points_inside.extend(line_inside_polygon(line, polygon))
+                    # points_inside.append(line_inside_polygon(line, polygon).endNode)
+                max_length_line = Line(Point(0, 0), Point(0, 0))
+                for i in range(len(points_inside)):
+                    for j in range(i+1, len(points_inside)):
+                        temp_line = Line(points_inside[i], points_inside[j])
+                        if max_length_line.get_length() < temp_line.get_length():
+                            max_length_line = temp_line
+                length_inside += max_length_line.get_length()
 
+        if length_inside/polyline.get_length() >= 0.5:
+            lines_50_percent.append(polyline)
     return lines_50_percent
 
 
-def polyline_in_polygon(polyline, polygon):
-    length_inside = 0
-    for line in polyline.lines:
-        length_inside += line_in_polygon(line, polygon)
-    return length_inside
-
-
-def line_in_polygon(line, polygon):
-    if is_vertex_inside_polygon(line.startNode, polygon) and is_vertex_inside_polygon(line.endNode, polygon):
-        return line.get_length()
-    elif not is_vertex_inside_polygon(line.startNode, polygon) and not is_vertex_inside_polygon(line.endNode, polygon):
-        return 0
-    else:
-        for polygon_line in polygon.get_line_segments():
-            if line.is_intersecting_line(polygon_line):
-                intersection = line.intersect_line(polygon_line)
-                if is_vertex_inside_polygon(line.startNode, polygon):
-                    return Line(line.startNode, intersection).get_length()
-                else:
-                    return Line(intersection, line.endNode).get_length()
-        else:
-            return 0
+def line_inside_polygon(line, polygon):
+    line_points_inside = []
+    if is_vertex_inside_polygon(line.startNode, polygon):
+        line_points_inside.append(line.startNode)
+    if is_vertex_inside_polygon(line.endNode, polygon):
+        line_points_inside.append(line.endNode)
+    if len(line_points_inside) < 2:
+        for polygon_Line in polygon.get_line_segments():
+            if polygon_Line.is_intersecting_line(line):
+                line_points_inside.append(polygon_Line.intersect_line(line))
+    if len(line_points_inside) < 2:
+        return []
+    return line_points_inside
 
 
 # Exercise 5
@@ -240,7 +246,7 @@ def sort_points(point_list, mode="SN", reverse=False):
         result_list.extend(middle_list)
         result_list.extend(sort_points(upper_list, mode))
 
-    elif mode == "EW":
+    elif mode == "WE":
         ref_point = point_list[len(point_list)//2]
         lower_list = []
         middle_list = []

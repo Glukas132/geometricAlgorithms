@@ -101,6 +101,13 @@ class Polyline:
             length += line.get_length()
         return length
 
+    def get_points(self):
+        points = []
+        for line in self.lines:
+            if len(points) == 0:
+                points.append(line.startNode)
+            points.append(line.endNode)
+
 
 # Polygon class (CCW - see picture in readme file)
 class Polygon:
