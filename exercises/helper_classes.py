@@ -26,7 +26,7 @@ class Point:
     # taken from the slides
     def point_position(self, point1, point2):
         """
-        Calculates whether the point is left, right or collinear to another two points
+        Calculates whether this point is left, right or collinear to another two points
         :param point1: first point to define a line
         :param point2: second point to define a line
         :return: 0 - if the points are collinear;
@@ -153,7 +153,7 @@ class Polygon:
 
     def is_convex(self):
         for i in range(2,len(self.points)):
-            if self.points[i-2].point_position(self.points[i-1], self.points[i]) == -1:
+            if self.points[i].point_position(self.points[i-2], self.points[i-1]) == -1:
                 return False
         return True
 
