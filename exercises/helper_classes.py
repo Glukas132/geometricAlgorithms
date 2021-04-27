@@ -1,4 +1,7 @@
 # point class
+import math
+
+
 class Point:
     # xCoord and yCoord are numeric values
     def __init__(self, xCoord=0, yCoord=0):
@@ -6,7 +9,7 @@ class Point:
         self.yCoord = yCoord
 
     def __eq__(self, other):
-        if abs(self.yCoord - other.yCoord) < 0.00001 and abs(self.xCoord - other.xCoord) < 0.00001:
+        if abs(self.yCoord - other.yCoord) < 10**-9 and abs(self.xCoord - other.xCoord) < 10**-9:
             return True
         else:
             return False
@@ -154,6 +157,38 @@ class Polygon:
                 return False
         return True
 
+    def calculate_centroid(self):
+        area = self.calculate_area()
+        centroid_x = 0
+        centroid_y = 0
+        for i in range(len(self.points) - 1):
+            centroid_x += (self.points[i].xCoord + self.points[i + 1].xCoord) * \
+                          (self.points[i].xCoord * self.points[i + 1].yCoord -
+                           self.points[i + 1].xCoord * self.points[i].yCoord)
+        centroid_x /= 6 * area
+
+        for i in range(len(self.points) - 1):
+            centroid_y += (self.points[i].yCoord + self.points[i + 1].yCoord) * \
+                          (self.points[i].xCoord * self.points[i + 1].yCoord -
+                           self.points[i + 1].xCoord * self.points[i].yCoord)
+        centroid_y /= 6 * area
+
+        return Point(centroid_x, centroid_y)
+
+    def calculate_bounds(self):
+        x_min, y_min = math.inf, math.inf
+        x_max, y_max = -math.inf, -math.inf
+        for point in self.points:
+            if point.xCoord > x_max:
+                x_max = point.xCoord
+            if point.yCoord > y_max:
+                y_max = point.yCoord
+            if point.xCoord < x_min:
+                x_min = point.xCoord
+            if point.yCoord < y_min:
+                y_min = point.yCoord
+        return x_min, x_max, y_min, y_max
+
     def draw(self):
         output = ''
         counter = 0
@@ -186,6 +221,12 @@ class Hole:
         self.points = arrayOfPoints
         # no further holes inside holes
         self.holes = []
+
+    def is_convex(self):
+        for i in range(2, len(self.points)):
+            if self.points[i - 2].point_position(self.points[i - 1], self.points[i]) == -1:
+                return False
+        return True
 
     def get_line_segments(self):
         segments = []
