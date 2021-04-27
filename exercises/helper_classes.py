@@ -5,6 +5,10 @@ class Point:
         self.xCoord = xCoord
         self.yCoord = yCoord
 
+    def __eq__(self, other):
+        # TODO
+        return False
+
     def sameCoordinates(self, point):
         if abs(self.yCoord - point.yCoord) < 0.00001 and abs(self.xCoord - point.xCoord) < 0.00001:
             return True
@@ -12,7 +16,7 @@ class Point:
             return False
 
     def length_to(self, point):
-        return ((self.xCoord - point.xCoord)**2+(self.yCoord - point.yCoord)**2)**0.5
+        return ((self.xCoord - point.xCoord) ** 2 + (self.yCoord - point.yCoord) ** 2) ** 0.5
 
     # taken from the slides
     def point_position(self, point1, point2):
@@ -24,7 +28,8 @@ class Point:
                  1 if the point is to the left of the line;
                  -1 if the point is to the right of the line
         """
-        z_mod = (point2.xCoord - point1.xCoord) * (self.yCoord - point1.yCoord) - (self.xCoord - point1.xCoord) * (point2.yCoord - point1.yCoord)
+        z_mod = (point2.xCoord - point1.xCoord) * (self.yCoord - point1.yCoord) - (self.xCoord - point1.xCoord) * (
+                    point2.yCoord - point1.yCoord)
         if z_mod == 0:
             return 0
         elif z_mod > 0:
@@ -49,7 +54,7 @@ class Line:
         :param line: the line to intersection with
         :return: 1 if the lines intersect; 0 if the lines don't intersect
         """
-        return  \
+        return \
             (line.startNode.point_position(self.startNode, self.endNode) *
              line.endNode.point_position(self.startNode, self.endNode)) < 0 and \
             (self.startNode.point_position(line.startNode, line.endNode) *
@@ -84,7 +89,8 @@ class Line:
         Calculates the length of the line
         :return: the length
         """
-        return ((self.endNode.xCoord - self.startNode.xCoord)**2+(self.endNode.yCoord - self.startNode.yCoord)**2)**0.5
+        return ((self.endNode.xCoord - self.startNode.xCoord) ** 2 + (
+                    self.endNode.yCoord - self.startNode.yCoord) ** 2) ** 0.5
 
 
 # polyline class
@@ -125,8 +131,9 @@ class Polygon:
 
     def calculate_area(self):
         area = 0
-        for i in range(len(self.points)-1):
-            area += (self.points[i].xCoord + self.points[i+1].xCoord) * (self.points[i+1].yCoord - self.points[i].yCoord)
+        for i in range(len(self.points) - 1):
+            area += (self.points[i].xCoord + self.points[i + 1].xCoord) * (
+                        self.points[i + 1].yCoord - self.points[i].yCoord)
 
         for hole in self.holes:
             area -= hole.calculate_area()
@@ -135,8 +142,8 @@ class Polygon:
 
     def get_line_segments(self):
         segments = []
-        for segment_number in range(len(self.points)-1):
-            segments.append(Line(self.points[segment_number], self.points[segment_number+1]))
+        for segment_number in range(len(self.points) - 1):
+            segments.append(Line(self.points[segment_number], self.points[segment_number + 1]))
         return segments
 
     def draw(self):
@@ -152,7 +159,7 @@ class Polygon:
                         found = True
                 if not found:
                     output += ' '
-            if counter == len(self.points)-1:
+            if counter == len(self.points) - 1:
                 break
             output += '\n'
         print(output)
@@ -174,12 +181,13 @@ class Hole:
 
     def get_line_segments(self):
         segments = []
-        for segment_number in range(len(self.points)-1):
-            segments.append(Line(self.points[segment_number], self.points[segment_number+1]))
+        for segment_number in range(len(self.points) - 1):
+            segments.append(Line(self.points[segment_number], self.points[segment_number + 1]))
         return segments
 
     def calculate_area(self):
         area = 0
-        for i in range(len(self.points)-1):
-            area += (self.points[i].xCoord + self.points[i+1].xCoord) * (self.points[i+1].yCoord - self.points[i].yCoord)
+        for i in range(len(self.points) - 1):
+            area += (self.points[i].xCoord + self.points[i + 1].xCoord) * (
+                        self.points[i + 1].yCoord - self.points[i].yCoord)
         return abs(area / 2)
