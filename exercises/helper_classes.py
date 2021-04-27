@@ -6,8 +6,10 @@ class Point:
         self.yCoord = yCoord
 
     def __eq__(self, other):
-        # TODO
-        return False
+        if abs(self.yCoord - other.yCoord) < 0.00001 and abs(self.xCoord - other.xCoord) < 0.00001:
+            return True
+        else:
+            return False
 
     def sameCoordinates(self, point):
         if abs(self.yCoord - point.yCoord) < 0.00001 and abs(self.xCoord - point.xCoord) < 0.00001:
@@ -145,6 +147,12 @@ class Polygon:
         for segment_number in range(len(self.points) - 1):
             segments.append(Line(self.points[segment_number], self.points[segment_number + 1]))
         return segments
+
+    def is_convex(self):
+        for i in range(2,len(self.points)):
+            if self.points[i-2].point_position(self.points[i-1], self.points[i]) == -1:
+                return False
+        return True
 
     def draw(self):
         output = ''

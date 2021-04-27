@@ -13,7 +13,7 @@ def is_polygon_convex(polygon):
     :param polygon: Polygon to be checked.
     :return: If the given polygon is convex True is returned, otherwise False.
     """
-    return True
+    return polygon.is_convex()
 
 
 # Exercise 2
