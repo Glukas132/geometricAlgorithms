@@ -9,6 +9,8 @@ arrayOfPoints = [p1, p2, p3, p4]
 
 
 # MergeHull test
-def test_mergeHull_polygon_1():
-    assert mergeHull(arrayOfPoints) == [p1, p4,
-                                        p3], f"Convex Hull was calculated wrongly"
+def test_jarvis_march_1():
+    assert jarvis_march(arrayOfPoints) == [p1, p4, p3], f"Convex Hull was calculated wrongly"
+
+if __name__ == "__main__":
+    test_jarvis_march_1()

@@ -6,6 +6,7 @@
 from exercises.helper_classes import *
 import random as rnd
 
+
 # Exercise 1
 def is_polygon_convex(polygon):
     """
@@ -76,7 +77,39 @@ def jarvis_march(point_list):
     This list starts with the point with the lowest x coordinate and then  points are sorted in counterclockwise
     order from that point.
     """
-    return [Point]
+    convex_hull = []
+    # find the point with the lowest Y-Coordinate; if two points have same Y-Coordinate, take the one with lower X-Coord
+    p0 = point_list[0]
+    for point in point_list:
+        if point.yCoord < p0.yCoord or (point.yCoord == p0.yCoord and point.xCoord < p0.xCoord):
+            p0 = point
+
+    convex_hull.append(p0)
+    convex_hull.append(lowest_angle(point_list, p0, Point(1 + p0.xCoord, 0 + p0.yCoord)))
+
+    while convex_hull[0] != convex_hull[-1]:
+        convex_hull.append(lowest_angle(point_list, convex_hull[-2], convex_hull[-1]))
+
+    return convex_hull[:-1]
+
+def lowest_angle(point_list, point1, point2):
+    '''
+    finds the point from point_list with the lowest angle to the line between point1 and point2
+    :param point_list: a list of points to be searched
+    :param point1: the startpoint of the line
+    :param point2: the endpoint of the line
+    :return: the point with the lowest angle
+    '''
+    min_angle = math.inf
+    min_point = None
+    for point in point_list:
+        if point != point1 and point != point2:
+            point_along_line = Point(2 * point2.xCoord - point1.xCoord, 2 * point2.yCoord - point1.yCoord)
+            angle = point2.angle_between(point_along_line, point)
+            if angle < min_angle:
+                min_angle = angle
+                min_point = point
+    return min_point
 
 
 # Exercise 5

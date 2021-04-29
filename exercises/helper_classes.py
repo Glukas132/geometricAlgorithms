@@ -9,7 +9,7 @@ class Point:
         self.yCoord = yCoord
 
     def __eq__(self, other):
-        if abs(self.yCoord - other.yCoord) < 10**-9 and abs(self.xCoord - other.xCoord) < 10**-9:
+        if abs(self.yCoord - other.yCoord) < 10 ** -9 and abs(self.xCoord - other.xCoord) < 10 ** -9:
             return True
         else:
             return False
@@ -19,6 +19,17 @@ class Point:
             return True
         else:
             return False
+
+    def angle_between(self, point1, point2):
+        '''
+        Calculates the angle between self-point1 and self-point2 in radians
+        :param point1: first point
+        :param point2: second point
+        :return: the angle in radians
+        '''
+        angle = math.atan2(point2.yCoord - self.yCoord, point2.xCoord - self.xCoord) - \
+                math.atan2(point1.yCoord - self.yCoord, point1.xCoord - self.xCoord)
+        return angle
 
     def length_to(self, point):
         return ((self.xCoord - point.xCoord) ** 2 + (self.yCoord - point.yCoord) ** 2) ** 0.5
@@ -34,7 +45,7 @@ class Point:
                  -1 if the point is to the right of the line
         """
         z_mod = (point2.xCoord - point1.xCoord) * (self.yCoord - point1.yCoord) - (self.xCoord - point1.xCoord) * (
-                    point2.yCoord - point1.yCoord)
+                point2.yCoord - point1.yCoord)
         if z_mod == 0:
             return 0
         elif z_mod > 0:
@@ -95,7 +106,7 @@ class Line:
         :return: the length
         """
         return ((self.endNode.xCoord - self.startNode.xCoord) ** 2 + (
-                    self.endNode.yCoord - self.startNode.yCoord) ** 2) ** 0.5
+                self.endNode.yCoord - self.startNode.yCoord) ** 2) ** 0.5
 
 
 # polyline class
@@ -138,7 +149,7 @@ class Polygon:
         area = 0
         for i in range(len(self.points) - 1):
             area += (self.points[i].xCoord + self.points[i + 1].xCoord) * (
-                        self.points[i + 1].yCoord - self.points[i].yCoord)
+                    self.points[i + 1].yCoord - self.points[i].yCoord)
 
         for hole in self.holes:
             area -= hole.calculate_area()
@@ -152,8 +163,8 @@ class Polygon:
         return segments
 
     def is_convex(self):
-        for i in range(2,len(self.points)):
-            if self.points[i].point_position(self.points[i-2], self.points[i-1]) == -1:
+        for i in range(2, len(self.points)):
+            if self.points[i].point_position(self.points[i - 2], self.points[i - 1]) == -1:
                 return False
         return True
 
@@ -238,5 +249,5 @@ class Hole:
         area = 0
         for i in range(len(self.points) - 1):
             area += (self.points[i].xCoord + self.points[i + 1].xCoord) * (
-                        self.points[i + 1].yCoord - self.points[i].yCoord)
+                    self.points[i + 1].yCoord - self.points[i].yCoord)
         return abs(area / 2)
