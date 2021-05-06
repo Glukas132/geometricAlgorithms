@@ -85,7 +85,7 @@ def jarvis_march(point_list):
             p0 = point
 
     convex_hull.append(p0)
-    convex_hull.append(lowest_angle(point_list, p0, Point(1 + p0.xCoord, 0 + p0.yCoord)))
+    convex_hull.append(lowest_angle(point_list, p0, p0 + Point(1, 0)))
 
     while convex_hull[0] != convex_hull[-1]:
         convex_hull.append(lowest_angle(point_list, convex_hull[-2], convex_hull[-1]))
@@ -119,4 +119,50 @@ def spiral(point_list):
     :param point_list: Point list from which the spiral-like Polyline will be calculated
     :return: The list of sorted Point objects starting from the left-most point and proceeding counter-clockwise.
     """
+
     return [Point]
+
+
+def polar_sort(point_list, p0):
+    if len(point_list) <= 1:
+        return point_list
+
+    ref_point = point_list[len(point_list) // 2]
+    ref_angle = p0.angle_between(ref_point, p0 + Point(1, 0))
+
+    lower_list = []
+    middle_list = []
+    upper_list = []
+    result_list = []
+
+    for point in point_list:
+        point_angle = p0.angle_between(point, p0 + Point(1, 0))
+        if ref_angle == point_angle:
+            middle_list.append(point)
+        elif ref_angle > point_angle:
+            lower_list.append(point)
+        else:
+            upper_list.append(point)
+
+    if len(middle_list) > 1:
+        sort_points_by_length(middle_list, p0)
+
+    result_list.extend(polar_sort(lower_list, p0))
+    result_list.extend(middle_list)
+    result_list.extend(polar_sort(upper_list, p0))
+
+    return result_list
+
+
+def sort_points_by_length(point_list, p0):
+    ref_point = point_list[len(point_list) // 2]
+    lower_list = []
+    middle_list = []
+    upper_list = []
+    for point in point_list:
+        if p0.length_to(ref_point) == p0.length_to(point):
+            middle_list.append(point)
+        elif p0.length_to(ref_point) > p0.length_to(point):
+            lower_list.append(point)
+        else:
+            upper_list.append(point)
