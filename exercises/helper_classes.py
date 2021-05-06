@@ -184,6 +184,12 @@ class Polygon:
                            self.points[i + 1].xCoord * self.points[i].yCoord)
         centroid_y /= 6 * area
 
+        for hole in self.holes:
+            hole_centroid = hole.calculate_centroid()
+            hole_area = hole.calculate_area()
+            centroid_x = (centroid_x * area - hole_centroid.xCoord * hole_area) / (area - hole_area)
+            centroid_y = (centroid_y * area - hole_centroid.yCoord * hole_area) / (area - hole_area)
+
         return Point(centroid_x, centroid_y)
 
     def calculate_bounds(self):
@@ -251,3 +257,19 @@ class Hole:
             area += (self.points[i].xCoord + self.points[i + 1].xCoord) * (
                     self.points[i + 1].yCoord - self.points[i].yCoord)
         return abs(area / 2)
+
+    def calculate_centroid(self):
+        area = self.calculate_area()
+        centroid_x = 0
+        centroid_y = 0
+        for i in range(len(self.points) - 1):
+            centroid_x += (self.points[i].xCoord + self.points[i + 1].xCoord) * \
+                          (self.points[i].xCoord * self.points[i + 1].yCoord -
+                           self.points[i + 1].xCoord * self.points[i].yCoord)
+        centroid_x /= 6 * area
+
+        for i in range(len(self.points) - 1):
+            centroid_y += (self.points[i].yCoord + self.points[i + 1].yCoord) * \
+                          (self.points[i].xCoord * self.points[i + 1].yCoord -
+                           self.points[i + 1].xCoord * self.points[i].yCoord)
+        centroid_y /= 6 * area
