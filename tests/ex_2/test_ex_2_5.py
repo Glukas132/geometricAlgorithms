@@ -13,4 +13,5 @@ arrayOfPoints = [p1, p2, p3, p4, p5, p6, p7]
 
 # Spiral polyline computation with Graham’s scan
 def test_spiral_1():
-    assert spiral(arrayOfPoints) == [p3, p5, p2, p1, p4, p6, p7], f"Spiral polyline was calculated wrongly"
+    result = spiral(arrayOfPoints)
+    assert result == [p3, p5, p2, p1, p4, p6, p7], f"Spiral polyline was calculated wrongly"

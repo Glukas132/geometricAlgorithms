@@ -92,6 +92,7 @@ def jarvis_march(point_list):
 
     return convex_hull[:-1]
 
+
 def lowest_angle(point_list, point1, point2):
     '''
     finds the point from point_list with the lowest angle to the line between point1 and point2
@@ -119,8 +120,40 @@ def spiral(point_list):
     :param point_list: Point list from which the spiral-like Polyline will be calculated
     :return: The list of sorted Point objects starting from the left-most point and proceeding counter-clockwise.
     """
+    p0 = find_leftmost_point(point_list)
+    point_list.remove(p0)
+    sorted_list = polar_sort(point_list, p0)
+    convex_hull = [p0]
+    for k in sorted_list:
+        j = convex_hull[-1]
+        try:
+            i = convex_hull[-2]
+        except:
+            i = None
+        while i is not None and i.point_position(j, k) == -1:
+            convex_hull.pop()
+            j = i
+            try:
+                i = convex_hull[-2]
+            except:
+                i = None
+        convex_hull.append(k)
+    for point in convex_hull:
+        if point in point_list:
+            point_list.remove(point)
+    if len(point_list) > 1:
+        convex_hull.extend(spiral(point_list))
+    else:
+        convex_hull.extend(point_list)
+    return convex_hull
 
-    return [Point]
+
+def find_leftmost_point(point_list):
+    result = Point(math.inf, math.inf)
+    for point in point_list:
+        if point.xCoord < result.xCoord or (point.xCoord == result.xCoord and point.yCoord < result.yCoord):
+            result = point
+    return result
 
 
 def polar_sort(point_list, p0):
@@ -128,15 +161,15 @@ def polar_sort(point_list, p0):
         return point_list
 
     ref_point = point_list[len(point_list) // 2]
-    ref_angle = p0.angle_between(ref_point, p0 + Point(1, 0))
+    ref_angle = p0.angle_between(p0 + Point(0, -1), ref_point)
 
+    result_list = []
     lower_list = []
     middle_list = []
     upper_list = []
-    result_list = []
 
     for point in point_list:
-        point_angle = p0.angle_between(point, p0 + Point(1, 0))
+        point_angle = p0.angle_between(p0 + Point(0, -1), point)
         if ref_angle == point_angle:
             middle_list.append(point)
         elif ref_angle > point_angle:

@@ -15,16 +15,15 @@ class Point:
             return False
 
     def __add__(self, other):
-        self.xCoord += other.xCoord
-        self.yCoord += other.yCoord
-        return self
+        x = self.xCoord + other.xCoord
+        y = self.yCoord + other.yCoord
+        return Point(x, y)
 
     def sameCoordinates(self, point):
         if abs(self.yCoord - point.yCoord) < 0.00001 and abs(self.xCoord - point.xCoord) < 0.00001:
             return True
         else:
             return False
-
 
     def angle_between(self, point1, point2):
         '''
