@@ -84,7 +84,8 @@ class Line:
         self.endNode = p2
 
     def __eq__(self, other):
-        return self.endNode == other.endNode and self.startNode == other.startNode
+        return self.endNode == other.endNode and self.startNode == other.startNode or \
+               self.endNode == other.startNode and self.startNode == other.endNode
 
     # taken from the slides
     def is_intersecting_line(self, line):

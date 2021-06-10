@@ -15,7 +15,16 @@ def bisector(point1, point2, length=1):
     :param length: Length of the calculated bisector. Default is 1.
     :return: The bisector for point1 and point2 of the given length as Line object.
     """
-    return Line
+    line = Line(point1, point2)
+    center_x = (point1.xCoord + point2.xCoord) / 2
+    center_y = (point1.yCoord + point2.yCoord) / 2
+    center = Point(center_x, center_y)
+    normal_unit_vector_x = (point2.yCoord - point1.yCoord) / line.get_length() * length/2
+    normal_unit_vector_y = -(point2.xCoord - point1.xCoord) / line.get_length() * length/2
+    bisector_result = Line(Point(center_x + normal_unit_vector_x, center_y + normal_unit_vector_y),
+                           Point(center_x - normal_unit_vector_x, center_y - normal_unit_vector_y))
+
+    return bisector_result
 
 
 # Exercise 2
