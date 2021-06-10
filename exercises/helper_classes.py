@@ -19,6 +19,21 @@ class Point:
         y = self.yCoord + other.yCoord
         return Point(x, y)
 
+    def __sub__(self, other):
+        x = self.xCoord - other.xCoord
+        y = self.yCoord - other.yCoord
+        return Point(x, y)
+
+    def __mul__(self, scalar):
+        x = self.xCoord * scalar
+        y = self.yCoord * scalar
+        return Point(x, y)
+
+    def __div__(self, scalar):
+        x = self.xCoord / scalar
+        y = self.yCoord / scalar
+        return Point(x, y)
+
     def sameCoordinates(self, point):
         if abs(self.yCoord - point.yCoord) < 0.00001 and abs(self.xCoord - point.xCoord) < 0.00001:
             return True
