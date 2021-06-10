@@ -41,12 +41,12 @@ class Point:
             return False
 
     def angle_between(self, point1, point2):
-        '''
+        """
         Calculates the angle between self-point1 and self-point2 in radians
         :param point1: first point
         :param point2: second point
         :return: the angle in radians
-        '''
+        """
         angle = math.atan2(point2.yCoord - self.yCoord, point2.xCoord - self.xCoord) - \
                 math.atan2(point1.yCoord - self.yCoord, point1.xCoord - self.xCoord)
         return angle
@@ -82,6 +82,9 @@ class Line:
             raise Exception("P1 and P2 has to be of type Point")
         self.startNode = p1
         self.endNode = p2
+
+    def __eq__(self, other):
+        return self.endNode == other.endNode and self.startNode == other.startNode
 
     # taken from the slides
     def is_intersecting_line(self, line):
