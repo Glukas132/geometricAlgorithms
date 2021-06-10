@@ -94,13 +94,13 @@ def jarvis_march(point_list):
 
 
 def lowest_angle(point_list, point1, point2):
-    '''
+    """
     finds the point from point_list with the lowest angle to the line between point1 and point2
     :param point_list: a list of points to be searched
     :param point1: the startpoint of the line
     :param point2: the endpoint of the line
     :return: the point with the lowest angle
-    '''
+    """
     min_angle = math.inf
     min_point = None
     for point in point_list:
