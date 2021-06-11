@@ -34,7 +34,30 @@ def point_intersection_plane_sweep(lines):
     :param lines: The list of lines whose mutual intersections will be calculated.
     :return: A list of intersection points for the given list of lines.
     """
-    return [Point]
+    event_queue = set()
+    intersections = []
+    for line in lines:
+        event_queue.add(line.startNode.yCoord)
+        event_queue.add(line.endNode.yCoord)
+    event_queue = list(event_queue)
+    event_queue.sort()
+
+    for y in event_queue:
+        lines_to_test = []
+        for line in lines:
+            if line.startNode.yCoord <= y < line.endNode.yCoord or line.startNode.yCoord > y <= line.endNode.yCoord:
+                intersections.extend(find_intersections(line, lines_to_test))
+                lines_to_test.append(line)
+
+    return intersections
+
+
+def find_intersections(line, lines):
+    intersections = []
+    for other_line in lines:
+        if line.is_intersecting_line(other_line):
+            intersections.append(line.intersect_line(other_line))
+    return intersections
 
 
 # Exercise 3
